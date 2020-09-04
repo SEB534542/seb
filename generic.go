@@ -13,7 +13,7 @@ import (
 )
 
 // MaxIntSlice takes a variadic parameter of integers and
-// returns the highest integer
+// returns the highest integer.
 func MaxIntSlice(xi ...int) int {
 	var max int
 	for i, v := range xi {
@@ -24,7 +24,8 @@ func MaxIntSlice(xi ...int) int {
 	return max
 }
 
-// SaveToJson takes an interface, stores it into the filename and returns an error
+// SaveToJson takes an interface, stores it into the filename
+// and returns an error (or nil).
 func SaveToJson(i interface{}, fileName string) error {
 	bs, err := json.Marshal(i)
 	if err != nil {
@@ -38,7 +39,7 @@ func SaveToJson(i interface{}, fileName string) error {
 }
 
 // SendMail sends an e-mail to one or more recipients. Example:
-// SendMail([]string("recipient1@test.com", "recipient2@test.com"), "sender@test.com", "Subject", "Body", "12345", "smtp.gmail.com", "587")
+// SendMail([]string("recipient1@test.com", "recipient2@test.com"), "sender@test.com", "Subject", "Body", "12345", "smtp.gmail.com", "587").
 func SendMail(to []string, from, subj, body, password, domain, port string) {
 	var msgTo string
 	for i, s := range to {
@@ -87,7 +88,7 @@ func ReadCSV(file string) [][]string {
 
 // AppendCSV takes a CSV filename and slice of new lines and
 // adds the later to the existing CSV file.
-func AppendCSV(file string, newLines [][]string) {
+func AppendCSV(file string, newLines [][]string) error {
 
 	// Get current data
 	lines := ReadCSV(file)
@@ -98,12 +99,13 @@ func AppendCSV(file string, newLines [][]string) {
 	// Write the file
 	f, err := os.Create(file)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	w := csv.NewWriter(f)
 	if err = w.WriteAll(lines); err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil
 }
 
 // StrToInt transforms string to an int and
