@@ -16,7 +16,7 @@ var DbUsers = map[string]user{}      // user ID, user
 
 // AlreadyLoggedIn checks if the UUID in the "session" cookie
 // exists in the variable DbSessions and if that username still exist in our DbUsers
-func alreadyLoggedIn(req *http.Request) bool {
+func AlreadyLoggedIn(req *http.Request) bool {
 	c, err := req.Cookie("session")
 	if err != nil {
 		return false

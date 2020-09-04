@@ -1,9 +1,10 @@
-// Package seb contains generic functions that can be reused
+// Package seb contains generic functions
 package seb
 
 import (
 	"encoding/csv"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/smtp"
@@ -23,16 +24,17 @@ func MaxIntSlice(xi ...int) int {
 	return max
 }
 
-// SaveToJson takes an interface and stores it into the filename
-func SaveToJson(i interface{}, fileName string) {
+// SaveToJson takes an interface, stores it into the filename and returns an error
+func SaveToJson(i interface{}, fileName string) error {
 	bs, err := json.Marshal(i)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	err = ioutil.WriteFile(fileName, bs, 0644)
 	if err != nil {
-		log.Fatal("Error", err)
+		return err
 	}
+	return nil
 }
 
 // SendMail sends an e-mail to one or more recipients. Example:
@@ -104,12 +106,12 @@ func AppendCSV(file string, newLines [][]string) {
 	}
 }
 
-// strToInt transforms string to an int and
+// StrToInt transforms string to an int and
 // returns a positive int or zero.
-func strToIntZ(s string) (int, error) {
+func StrToIntZ(s string) (int, error) {
 	i, err := strconv.Atoi(s)
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("StrToIntZ: unable to transform %s to an int", s)
 	}
 	if i < 0 {
 		return 0, err
