@@ -1,7 +1,9 @@
 package seb
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"testing"
 )
@@ -101,4 +103,64 @@ func TestAppendAndReadCSV(t *testing.T) {
 		}
 	}
 	os.Remove(fname)
+}
+
+func TestSaveAndReadJSON(t *testing.T) {
+	const fname = "test.json"
+	type ColorGroup struct {
+		ID     int
+		Name   string
+		Colors []string
+	}
+	test := ColorGroup{
+		ID:     1,
+		Name:   "Reds",
+		Colors: []string{"Crimson", "Red", "Ruby", "Maroon"},
+	}
+	SaveToJSON(test, fname)
+
+	data, err := ioutil.ReadFile(fname)
+	if err != nil {
+		t.Errorf("Error while reading %v: %v", fname, err)
+	}
+
+	want := ColorGroup{}
+
+	err = json.Unmarshal(data, &want)
+	if err != nil {
+		t.Errorf("Error while unmarshalling %v: %v", fname, err)
+	}
+
+	if want.ID != test.ID || want.Name != test.Name {
+		t.Error("Want:", want, "Got:", test)
+	}
+
+	for i, _ := range want.Colors {
+		if want.Colors[i] != test.Colors[i] {
+			t.Error("Error in colors.", "Want:", want, "Got:", test)
+		}
+	}
+	os.Remove(fname)
+}
+
+func TestCalcAverage(t *testing.T) {
+	type test struct {
+		xi   []int
+		want int
+	}
+	tests := []test{
+		{[]int{0, 1, 2, 3, 4, 5, 6}, 3},
+		{[]int{0, 8, 2, 100, 4, -4, 12}, 17}, // Average is float of 17.42857, which is int of 17
+		{[]int{0, 8, 2, 100, 4, -4, 14}, 17}, // Average is float of 17.71429, which is int of 17
+		{[]int{0}, 0},
+		{[]int{-12, 8, 5, 4}, 1}, // Average is float of 1,25, which is int of 1
+	}
+
+	for _, v := range tests {
+		got := CalcAverage(v.xi...)
+		if got != v.want {
+			t.Error("Want:", v.want, "Got:", got)
+		}
+	}
+
 }

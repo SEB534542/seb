@@ -26,7 +26,7 @@ func MaxIntSlice(xi ...int) int {
 
 // SaveToJson takes an interface, stores it into the filename
 // and returns an error (or nil).
-func SaveToJson(i interface{}, fileName string) error {
+func SaveToJSON(i interface{}, fileName string) error {
 	bs, err := json.Marshal(i)
 	if err != nil {
 		return err
@@ -40,7 +40,7 @@ func SaveToJson(i interface{}, fileName string) error {
 
 // SendMail sends an e-mail to one or more recipients. Example:
 // SendMail([]string("recipient1@test.com", "recipient2@test.com"), "sender@test.com", "Subject", "Body", "12345", "smtp.gmail.com", "587").
-func SendMail(to []string, from, subj, body, password, domain, port string) {
+func SendMail(to []string, from, subj, body, password, domain, port string) error {
 	var msgTo string
 	for i, s := range to {
 		if i != 0 {
@@ -60,8 +60,9 @@ func SendMail(to []string, from, subj, body, password, domain, port string) {
 	// and send the email all in one step.
 	err := smtp.SendMail(domain+password, auth, from, to, msg)
 	if err != nil {
-		log.Fatal(err)
+		return fmt.Errorf("SendMail: error when sending: %v", err)
 	}
+	return nil
 }
 
 // ReadCSV reads a CSV file and returns the output as a slice of
@@ -72,7 +73,7 @@ func ReadCSV(file string) [][]string {
 	if err != nil {
 		f, err := os.Create(file)
 		if err != nil {
-			log.Fatal("Unable to create csv", err)
+			log.Panic("Unable to create csv", err)
 		}
 		f.Close()
 		return [][]string{}
@@ -81,7 +82,7 @@ func ReadCSV(file string) [][]string {
 	r := csv.NewReader(f)
 	lines, err := r.ReadAll()
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 	return lines
 }
