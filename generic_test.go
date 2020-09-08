@@ -102,7 +102,10 @@ func TestAppendAndReadCSV(t *testing.T) {
 			}
 		}
 	}
-	os.Remove(fname)
+	err = os.Remove(fname)
+	if err != nil {
+		fmt.Errorf("Unable to remove %v", err)
+	}
 }
 
 func TestSaveAndReadJSON(t *testing.T) {
@@ -140,7 +143,10 @@ func TestSaveAndReadJSON(t *testing.T) {
 			t.Error("Error in colors.", "Want:", want, "Got:", test)
 		}
 	}
-	os.Remove(fname)
+	err = os.Remove(fname)
+	if err != nil {
+		fmt.Errorf("Unable to remove %v", err)
+	}
 }
 
 func TestCalcAverage(t *testing.T) {

@@ -102,6 +102,7 @@ func AppendCSV(file string, newLines [][]string) error {
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 	w := csv.NewWriter(f)
 	if err = w.WriteAll(lines); err != nil {
 		return err
