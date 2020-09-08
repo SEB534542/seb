@@ -66,6 +66,12 @@ func TestMaxIntSlice(t *testing.T) {
 	}
 }
 
+func ExampleMaxIntSlice() {
+	fmt.Println(MaxIntSlice(0, 1, 2, 3, 4, 5, 6))
+	// Output:
+	// 6
+}
+
 func TestAppendAndReadCSV(t *testing.T) {
 	fname := "test.csv"
 	os.Remove(fname)
