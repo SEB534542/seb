@@ -10,6 +10,7 @@ import (
 	"net/smtp"
 	"os"
 	"strconv"
+	"time"
 )
 
 // MaxIntSlice takes a variadic parameter of integers and
@@ -152,4 +153,21 @@ func CalcAverage(xi ...int) int {
 		total = total + v
 	}
 	return total / len(xi)
+}
+
+// StoTime receives a string of time (format hh:mm) and a day offset, and returns a type time with today's and the supplied hours and minutes + the offset in days
+func StoTime(t string, days int) (time.Time, error) {
+	timeNow := time.Now()
+
+	timeHour, err := strconv.Atoi(t[:2])
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	timeMinute, err := strconv.Atoi(t[3:])
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	return time.Date(timeNow.Year(), timeNow.Month(), timeNow.Day()+days, int(timeHour), int(timeMinute), 0, 0, time.Local), nil
 }
