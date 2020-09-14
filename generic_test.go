@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"testing"
+	"time"
 )
 
 func TestStrToIntZ(t *testing.T) {
@@ -174,5 +175,22 @@ func TestCalcAverage(t *testing.T) {
 			t.Error("Want:", v.want, "Got:", got)
 		}
 	}
+}
 
+func TestStoTime(t *testing.T) {
+	type test struct {
+		t    string
+		d    int
+		want time.Time
+		err  error
+	}
+	tests := []test{
+		{"12:00", 0, time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 12, 0, 0, 0, time.Local), nil},
+	}
+	for _, v := range tests {
+		got, err := StoTime(v.t, v.d)
+		if got != v.want || err != v.err {
+			t.Error("Want:", v.want, "Got:", got, "Error:", err)
+		}
+	}
 }
