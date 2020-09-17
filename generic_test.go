@@ -31,7 +31,7 @@ func TestStrToIntZ(t *testing.T) {
 	}
 }
 
-func TestReverseXS(t *testing.T) {
+func TestReverseXs(t *testing.T) {
 	type test struct {
 		xs   []string
 		want []string
@@ -40,7 +40,7 @@ func TestReverseXS(t *testing.T) {
 		{[]string{"a", "b", "c", "d", "e"}, []string{"e", "d", "c", "b", "a"}},
 	}
 	for _, v := range tests {
-		got := ReverseXS(v.xs)
+		got := ReverseXs(v.xs)
 		for i, _ := range got {
 			if got[i] != v.want[i] {
 				t.Error("Want:", v.want, "Got:", got)
@@ -71,12 +71,6 @@ func ExampleMaxIntSlice() {
 	fmt.Println(MaxIntSlice(0, 1, 2, 3, 4, 5, 6))
 	// Output:
 	// 6
-}
-
-func ExampleSendMail() {
-	fmt.Println(SendMail([]string("recipient1@test.com", "recipient2@test.com"), "sender@test.com", "Subject", "Body", "12345", "smtp.gmail.com", "587"))
-	// Output:
-	// nil
 }
 
 func TestAppendAndReadCSV(t *testing.T) {

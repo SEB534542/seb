@@ -40,6 +40,7 @@ func SaveToJSON(i interface{}, fileName string) error {
 }
 
 // SendMail sends an e-mail to one or more recipients.
+// Example: SendMail([]string("recipient1@test.com", "recipient2@test.com"), "sender@test.com", "Subject", "Body", "12345", "smtp.gmail.com", "587"))
 func SendMail(to []string, from, subj, body, password, domain, port string) error {
 	var msgTo string
 	for i, s := range to {
@@ -124,25 +125,24 @@ func StrToIntZ(s string) (int, error) {
 	return i, err
 }
 
-// Reverse XS takes a slice of string and returns the exact same
-// slice in the the opposite order. If xs is 10 long, then xs[0]
-// will be xs[9] etc.
-func ReverseXS(xs []string) []string {
-	r := []string{}
-	for i, _ := range xs {
-		r = append(r, xs[len(xs)-1-i])
+// ReverseXs takes a slice of string and returns the exact same
+// slice in the the opposite order. If a is 10 long, then a[0]
+// will be a[9] etc.
+func ReverseXs(a []string) []string {
+	for i, j := 0, len(a)-1; i < j; i, j = i+1, j-1 {
+		a[i], a[j] = a[j], a[i]
 	}
-	return r
+	return a
 }
 
-// ReverseXXS does exactly the same as ReverseXS but now for a slice of slice
-// of string. This can be used for example on the output of ReadCSV.
-func ReverseXSS(xxs [][]string) [][]string {
-	r := [][]string{}
-	for i, _ := range xxs {
-		r = append(r, xxs[len(xxs)-1-i])
+// ReverseXxs does exactly the same as ReverseXs but now for a slice of slice
+// of string, where the first (main) slice is reversed.
+// This can be used for example on the output of ReadCSV.
+func ReverseXss(a [][]string) [][]string {
+	for i, j := 0, len(a)-1; i < j; i, j = i+1, j-1 {
+		a[i], a[j] = a[j], a[i]
 	}
-	return r
+	return a
 }
 
 // CalcAverage takes a variadic parameter of integers and
