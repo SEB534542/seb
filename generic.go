@@ -39,8 +39,7 @@ func SaveToJSON(i interface{}, fileName string) error {
 	return nil
 }
 
-// SendMail sends an e-mail to one or more recipients. Example:
-// SendMail([]string("recipient1@test.com", "recipient2@test.com"), "sender@test.com", "Subject", "Body", "12345", "smtp.gmail.com", "587").
+// SendMail sends an e-mail to one or more recipients.
 func SendMail(to []string, from, subj, body, password, domain, port string) error {
 	var msgTo string
 	for i, s := range to {
@@ -67,7 +66,8 @@ func SendMail(to []string, from, subj, body, password, domain, port string) erro
 }
 
 // ReadCSV reads a CSV file and returns the output as a slice of
-// string.
+// slice of string, where the main slice represents the rows and the subsequent
+// slice the column values.
 func ReadCSV(file string) [][]string {
 	// Read the file
 	f, err := os.Open(file)
@@ -146,7 +146,7 @@ func ReverseXSS(xxs [][]string) [][]string {
 }
 
 // CalcAverage takes a variadic parameter of integers and
-// returns the average integer
+// returns the average integer.
 func CalcAverage(xi ...int) int {
 	total := 0
 	for _, v := range xi {
@@ -155,7 +155,9 @@ func CalcAverage(xi ...int) int {
 	return total / len(xi)
 }
 
-// StoTime receives a string of time (format hh:mm) and a day offset, and returns a type time with today's and the supplied hours and minutes + the offset in days
+// StoTime receives a string of time (format hh:mm) and a day offset,
+// and returns a type time with today's and the supplied hours and
+// minutes + the offset in days.
 func StoTime(t string, days int) (time.Time, error) {
 	timeNow := time.Now()
 

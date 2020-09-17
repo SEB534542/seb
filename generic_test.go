@@ -73,6 +73,12 @@ func ExampleMaxIntSlice() {
 	// 6
 }
 
+func ExampleSendMail() {
+	fmt.Println(SendMail([]string("recipient1@test.com", "recipient2@test.com"), "sender@test.com", "Subject", "Body", "12345", "smtp.gmail.com", "587"))
+	// Output:
+	// nil
+}
+
 func TestAppendAndReadCSV(t *testing.T) {
 	fname := "test.csv"
 	os.Remove(fname)
