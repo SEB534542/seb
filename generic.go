@@ -170,6 +170,24 @@ func StoTime(t string, days int) (time.Time, error) {
 	if err != nil {
 		return time.Time{}, err
 	}
-
 	return time.Date(timeNow.Year(), timeNow.Month(), timeNow.Day()+days, int(timeHour), int(timeMinute), 0, 0, time.Local), nil
+}
+
+// loadConfig loads configuration from the given json file (including folder)
+// into i interface.
+func loadConfig(fname string, i interface{}) error {
+	if _, err := os.Stat(fname); os.IsNotExist(err) {
+		log.Printf("File '%v' does not exist, creating blank", fname)
+		seb.SaveToJSON(i, fname)
+	} else {
+		data, err := ioutil.ReadFile(fname)
+		if err != nil {
+			return fmt.Errorf("%s is corrupt. Please delete the file (%v)", fname, err)
+		}
+		err = json.Unmarshal(data, i)
+		if err != nil {
+			return fmt.Errorf("%s is corrupt. Please delete the file (%v)", fname, err)
+		}
+	}
+	return nil
 }
