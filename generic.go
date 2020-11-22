@@ -175,10 +175,10 @@ func StoTime(t string, days int) (time.Time, error) {
 
 // loadConfig loads configuration from the given json file (including folder)
 // into i interface.
-func loadConfig(fname string, i interface{}) error {
+func LoadConfig(fname string, i interface{}) error {
 	if _, err := os.Stat(fname); os.IsNotExist(err) {
 		log.Printf("File '%v' does not exist, creating blank", fname)
-		seb.SaveToJSON(i, fname)
+		SaveToJSON(i, fname)
 	} else {
 		data, err := ioutil.ReadFile(fname)
 		if err != nil {
