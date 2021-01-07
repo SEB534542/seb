@@ -191,3 +191,13 @@ func LoadConfig(fname string, i interface{}) error {
 	}
 	return nil
 }
+
+// ???
+func find(s []string, q string) bool {
+	for _, v := range s {
+		if v == q {
+			return true
+		}
+	}
+	return false
+}
