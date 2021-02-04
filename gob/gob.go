@@ -19,54 +19,55 @@ type Q struct {
 	Name string
 }
 
+func AddToGobFile(i interface{}, fname string) error {
+	// Initialize  encoder
+	var data bytes.Buffer
+	enc := gob.NewEncoder(&data) // Will encode (write) to data
+
+	// Encode (send) some values.
+	err := enc.Encode(i)
+	if err != nil {
+		return fmt.Errorf("Encode error: %v", err)
+	}
+
+	// Store encoded data in file fname
+	err = ioutil.WriteFile(fname, data.Bytes(), 0644)
+	if err != nil {
+		return fmt.Errorf("Write error to '%v': %v", fname, err)
+	}
+	return nil
+}
+
+func ReadGob(i interface{}, fname string) {
+	// Initialize decoder
+	var data bytes.Buffer
+	dec := gob.NewDecoder(&data) // Will decode (read) and store into data
+
+	// Read content from file
+	content, err := ioutil.ReadFile("test.gob")
+	if err != nil {
+		log.Fatal("Error reading file '%v':", fname, err)
+	}
+	y := bytes.NewBuffer(content)
+	data = *y
+
+	// Decode (receive) and print the values.
+
+	err = dec.Decode(i)
+	if err != nil {
+		log.Fatal("Decode error:", err)
+	}
+
+}
+
 // This example shows the basic usage of the package: Create an encoder,
 // transmit some values, receive them with a decoder.
 func main() {
-	// Initialize the encoder and decoder. Normally enc and dec would be
-	// bound to network connections and the encoder and decoder would
-	// run in different processes.
-	var data bytes.Buffer
 
-	enc := gob.NewEncoder(&data) // Will write to data
-	dec := gob.NewDecoder(&data) // Will read from data
+	AddToGobFile(P{3, 4, 5, "Pythagoras"}, "test2.gob")
 
-	// Encode (send) some values.
-	err := enc.Encode(P{3, 4, 5, "Pythagoras"})
-	if err != nil {
-		log.Fatal("encode error:", err)
-	}
-	err = enc.Encode(P{1782, 1841, 1922, "Treehouse"})
-	if err != nil {
-		log.Fatal("encode error:", err)
-	}
-
-	// Store data
-	err = ioutil.WriteFile("test.gob", data.Bytes(), 0644)
-	if err != nil {
-		log.Fatal("error storing:", err)
-	}
-
-	// Read data
-	raw, err := ioutil.ReadFile("test.gob")
-	if err != nil {
-		log.Fatal("error loading:", err)
-	}
-	x := &raw
-	fmt.Printf("%T\n", *x)
-	y := *x
-	data = bytes.NewBuffer(y)
-
-	// Decode (receive) and print the values.
 	var q Q
-	err = dec.Decode(&q)
-	if err != nil {
-		log.Fatal("decode error 1:", err)
-	}
-	fmt.Printf("%q: {%d, %d}\n", q.Name, *q.X, *q.Y)
-	err = dec.Decode(&q)
-	if err != nil {
-		log.Fatal("decode error 2:", err)
-	}
-	fmt.Printf("%q: {%d, %d}\n", q.Name, *q.X, *q.Y)
+	ReadGob(&q, "test2.gob")
+	fmt.Println(q)
 
 }
