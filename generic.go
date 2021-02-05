@@ -2,7 +2,9 @@
 package seb
 
 import (
+	"bytes"
 	"encoding/csv"
+	"encoding/gob"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -188,6 +190,29 @@ func LoadConfig(fname string, i interface{}) error {
 		if err != nil {
 			return fmt.Errorf("%s is corrupt. Please delete the file (%v)", fname, err)
 		}
+	}
+	return nil
+}
+
+// ReadGob reads a gob from a file and converts it into an interface.
+func ReadGob(i interface{}, fname string) error {
+	// Initialize decoder
+	var data bytes.Buffer
+	dec := gob.NewDecoder(&data) // Will decode (read) and store into data
+
+	// Read content from file
+	content, err := ioutil.ReadFile("test.gob")
+	if err != nil {
+		return fmt.Errorf("Error reading file '%v': %v", fname, err)
+	}
+	y := bytes.NewBuffer(content)
+	data = *y
+
+	// Decode (receive) and print the values.
+
+	err = dec.Decode(i)
+	if err != nil {
+		return fmt.Errorf("Decode error:", err)
 	}
 	return nil
 }
