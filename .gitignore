@@ -56,3 +56,4 @@ builds/**/images/*
 *.txt
 *.csv
 *.log
+*.gob
