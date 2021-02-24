@@ -175,8 +175,7 @@ func StoTime(t string, days int) (time.Time, error) {
 	return time.Date(timeNow.Year(), timeNow.Month(), timeNow.Day()+days, int(timeHour), int(timeMinute), 0, 0, time.Local), nil
 }
 
-// loadConfig loads configuration from the given json file (including folder)
-// into i interface.
+// loadConfig loads configuration from a given json file (including folder) and loads it into i interface.
 func LoadConfig(fname string, i interface{}) error {
 	if _, err := os.Stat(fname); os.IsNotExist(err) {
 		log.Printf("File '%v' does not exist, creating blank", fname)
