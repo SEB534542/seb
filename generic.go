@@ -217,7 +217,7 @@ func ReadGob(i interface{}, fname string) error {
 }
 
 // SaveGob encodes an interface and stores it as a Gob into a file named fname.
-func SaveGob(i interface{}, fname string) error {
+func SaveToGob(i interface{}, fname string) error {
 	var data bytes.Buffer
 
 	enc := gob.NewEncoder(&data) // Will write to data

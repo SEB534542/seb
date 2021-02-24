@@ -19,20 +19,21 @@ type Q struct {
 // This example shows how to store to and read gob from a file
 func main() {
 
+	fname := test.gob
 	a := P{3, 4, 5, "Pythagoras"}
 
 	// Save var a (which is of type P)
-	seb.SaveGob(a, "test.gob")
+	seb.SaveToGob(a, fname)
 
 	// load var a into struct P
 	var p P
-	seb.ReadGob(&p, "test.gob")
+	seb.ReadGob(&p, fname)
 	fmt.Println("Loaded var p:", p.X, p.Y, p.Z, p.Name)
 	fmt.Printf("Types: %T / %T\n", p, p.X)
 
 	// load var a into struct Q
 	var q Q
-	seb.ReadGob(&q, "test.gob")
+	seb.ReadGob(&q, fname)
 	fmt.Println("Loaded var q:", q.X, q.Y, p.Z, q.Name)
 	fmt.Printf("Types: %T / %T\n", q, q.X)
 }

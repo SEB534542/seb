@@ -111,7 +111,7 @@ func TestAppendAndReadCSV(t *testing.T) {
 	}
 	err = os.Remove(fname)
 	if err != nil {
-		fmt.Errorf("Unable to remove %v", err)
+		t.Errorf("Unable to remove %v", err)
 	}
 }
 
@@ -152,7 +152,7 @@ func TestSaveAndReadJSON(t *testing.T) {
 	}
 	err = os.Remove(fname)
 	if err != nil {
-		fmt.Errorf("Unable to remove %v", err)
+		t.Errorf("Unable to remove %v", err)
 	}
 }
 
@@ -205,7 +205,7 @@ func TestSaveAndReadGob(t *testing.T) {
 	a := P{3, 4, 5, "Pythagoras"}
 
 	// Save var a (which is of type P)
-	SaveGob(a, fname)
+	SaveToGob(a, fname)
 
 	// load var a into struct P
 	var b P
@@ -219,5 +219,4 @@ func TestSaveAndReadGob(t *testing.T) {
 	if err != nil {
 		t.Errorf("Unable to remove %v", err)
 	}
-
 }
