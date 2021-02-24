@@ -2,7 +2,9 @@
 package seb
 
 import (
+	"bytes"
 	"encoding/csv"
+	"encoding/gob"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -173,8 +175,7 @@ func StoTime(t string, days int) (time.Time, error) {
 	return time.Date(timeNow.Year(), timeNow.Month(), timeNow.Day()+days, int(timeHour), int(timeMinute), 0, 0, time.Local), nil
 }
 
-// loadConfig loads configuration from the given json file (including folder)
-// into i interface.
+// loadConfig loads configuration from a given json file (including folder) and loads it into i interface.
 func LoadConfig(fname string, i interface{}) error {
 	if _, err := os.Stat(fname); os.IsNotExist(err) {
 		log.Printf("File '%v' does not exist, creating blank", fname)
@@ -192,12 +193,46 @@ func LoadConfig(fname string, i interface{}) error {
 	return nil
 }
 
-// ???
-func find(s []string, q string) bool {
-	for _, v := range s {
-		if v == q {
-			return true
-		}
+// ReadGob reads a gob from a file and converts it into an interface.
+func ReadGob(i interface{}, fname string) error {
+	// Initialize decoder
+	var data bytes.Buffer
+	dec := gob.NewDecoder(&data) // Will decode (read) and store into data
+
+	// Read content from file
+	content, err := ioutil.ReadFile("test.gob")
+	if err != nil {
+		return fmt.Errorf("Error reading file '%v': %v", fname, err)
 	}
-	return false
+	y := bytes.NewBuffer(content)
+	data = *y
+
+	// Decode (receive) and print the values.
+
+	err = dec.Decode(i)
+	if err != nil {
+		return fmt.Errorf("Error decoding into '%v': %v (%v)", fname, err, i)
+	}
+	return nil
+}
+
+// SaveGob encodes an interface and stores it as a Gob into a file named fname.
+func SaveToGob(i interface{}, fname string) error {
+	var data bytes.Buffer
+
+	enc := gob.NewEncoder(&data) // Will write to data
+	//	dec := gob.NewDecoder(&data) // Will read from data
+
+	// Encode (send) some values.
+	err := enc.Encode(i)
+	if err != nil {
+		return fmt.Errorf("Error encoding '%v': %v", fname, err)
+	}
+
+	// Store data
+	err = ioutil.WriteFile("test.gob", data.Bytes(), 0644)
+	if err != nil {
+		return fmt.Errorf("Error storing '%v': %v", fname, err)
+	}
+	return nil
 }
