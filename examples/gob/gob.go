@@ -1,10 +1,7 @@
 package main
 
 import (
-	"bytes"
-	"encoding/gob"
 	"fmt"
-	"io/ioutil"
 
 	"github.com/SEB534542/seb"
 )
@@ -22,38 +19,20 @@ type Q struct {
 // This example shows how to store to and read gob from a file
 func main() {
 
-	SaveToGob(P{3, 4, 5, "Pythagoras"}, "test2.gob")
+	a := P{3, 4, 5, "Pythagoras"}
 
-	var q Q
-	seb.ReadGob(&q, "test2.gob")
-	fmt.Println("Q:", q.X, q.Y, q.Name)
-	fmt.Printf("Types: %T / %T\n", q, q.X)
+	// Save var a (which is of type P)
+	seb.SaveGob(a, "test.gob")
 
+	// load var a into struct P
 	var p P
-	seb.ReadGob(&p, "test2.gob")
-	fmt.Println("P:", p.X, p.Y, p.Name)
+	seb.ReadGob(&p, "test.gob")
+	fmt.Println("Loaded var p:", p.X, p.Y, p.Z, p.Name)
 	fmt.Printf("Types: %T / %T\n", p, p.X)
-}
 
-// SaveToGob encodes an interface and stores it into a file.
-func SaveToGob(i interface{}, fname string) error {
-	// Initialize  encoder
-	var data bytes.Buffer
-	enc := gob.NewEncoder(&data) // Will encode (write) to data
-
-	// Encode (send) some values.
-	fmt.Println(i)
-	err := enc.Encode(i)
-	if err != nil {
-		return fmt.Errorf("Encode error: %v", err)
-	}
-	fmt.Println(data)
-	fmt.Println(data.Bytes())
-
-	// Store encoded data in file fname
-	err = ioutil.WriteFile(fname, data.Bytes(), 0644)
-	if err != nil {
-		return fmt.Errorf("Write error to '%v': %v", fname, err)
-	}
-	return nil
+	// load var a into struct Q
+	var q Q
+	seb.ReadGob(&q, "test.gob")
+	fmt.Println("Loaded var q:", q.X, q.Y, p.Z, q.Name)
+	fmt.Printf("Types: %T / %T\n", q, q.X)
 }

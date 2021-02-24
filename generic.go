@@ -211,7 +211,28 @@ func ReadGob(i interface{}, fname string) error {
 
 	err = dec.Decode(i)
 	if err != nil {
-		return fmt.Errorf("Decode error:", err)
+		return fmt.Errorf("Error decoding into '%v': %v (%v)", fname, err, i)
+	}
+	return nil
+}
+
+// SaveGob encodes an interface and stores it as a Gob into a file named fname.
+func SaveGob(i interface{}, fname string) error {
+	var data bytes.Buffer
+
+	enc := gob.NewEncoder(&data) // Will write to data
+	//	dec := gob.NewDecoder(&data) // Will read from data
+
+	// Encode (send) some values.
+	err := enc.Encode(i)
+	if err != nil {
+		return fmt.Errorf("Error encoding '%v': %v", fname, err)
+	}
+
+	// Store data
+	err = ioutil.WriteFile("test.gob", data.Bytes(), 0644)
+	if err != nil {
+		return fmt.Errorf("Error storing '%v': %v", fname, err)
 	}
 	return nil
 }
