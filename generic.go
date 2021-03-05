@@ -252,12 +252,12 @@ func SaveToGob(i interface{}, fname string) error {
 // 	}
 // 	colNames:= XlsxColNames(user)
 // 	fmt.Println(colNames)
-// 	fmt.Println(colNames[2])
-// 	fmt.Println(colNames[3])
+// 	fmt.Println(colNames["2"])
+// 	fmt.Println(colNames["3"])
 // }
-func XlsxColNames(s interface{}) map[interface{}]string {
+func XlsxColNames(s interface{}) map[string]string {
 	const tagName = "xlsx"
-	m := map[interface{}]string{}
+	m := map[string]string{}
 	t := reflect.TypeOf(s)
 	for i := 0; i < t.NumField(); i++ {
 		// Get the field, returns https://golang.org/pkg/reflect/#StructField
