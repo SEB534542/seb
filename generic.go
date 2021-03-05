@@ -255,16 +255,19 @@ func SaveToGob(i interface{}, fname string) error {
 // 	fmt.Println(colNames["2"])
 // 	fmt.Println(colNames["3"])
 // }
-func XlsxColNames(s interface{}) map[string]string {
+func XlsxColNames(s interface{}) map[int]string {
 	const tagName = "xlsx"
-	m := map[string]string{}
+	m := map[int]string{}
 	t := reflect.TypeOf(s)
 	for i := 0; i < t.NumField(); i++ {
 		// Get the field, returns https://golang.org/pkg/reflect/#StructField
 		field := t.Field(i)
 		tag := field.Tag.Get(tagName)
 		if tag != "-" && tag != "" {
-			m[tag] = field.Name
+			col, err := strconv.Atoi(tag)
+			if err == nil {
+				m[col] = field.Name
+			}
 		}
 	}
 	return m
