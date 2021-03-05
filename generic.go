@@ -236,3 +236,35 @@ func SaveToGob(i interface{}, fname string) error {
 	}
 	return nil
 }
+
+// XlsxColNames takes a struct and returns a map of the xlsx tags in that struct (i.e. the columns) and the name of the associated struct field.
+// type User struct {
+// 	Id    int    `validate:"-"`
+// 	Name  string `xlsx:"2"`
+// 	Email string `validate:"3"`
+// }
+// func main() {
+// 	user := User{
+// 		Id:    1,
+// 		Name:  "John Doe",
+// 		Email: "john@example",
+// 	}
+// 	colNames:= XlsxColNames(user)
+// 	fmt.Println(colNames)
+// 	fmt.Println(colNames[2])
+// 	fmt.Println(colNames[3])
+// }
+func XlsxColNames(s interface{}) map[interface{}]string {
+	const tagName = "xlsx"
+	m := map[interface{}]string{}
+	t := reflect.TypeOf(s)
+	for i := 0; i < t.NumField(); i++ {
+		// Get the field, returns https://golang.org/pkg/reflect/#StructField
+		field := t.Field(i)
+		tag := field.Tag.Get(tagName)
+		if tag != "-" && tag != "" {
+			m[tag] = field.Name
+		}
+	}
+	return m
+}
