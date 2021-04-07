@@ -220,3 +220,21 @@ func TestSaveAndReadGob(t *testing.T) {
 		t.Errorf("Unable to remove %v", err)
 	}
 }
+
+func ExampleXlsxColNames() {
+	type User struct {
+		Id    int    `validate:"-"`
+		Name  string `xlsx:"2"`
+		Age   int    `xlsx:"3"`
+		Email string `validate:"3"`
+	}
+	user := User{
+		Id:    1,
+		Name:  "John Doe",
+		Email: "john@example",
+	}
+	colNames := XlsxColNames(user)
+	fmt.Println(colNames)
+	// Output: map[2:Name 3:Age]
+
+}

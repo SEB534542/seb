@@ -239,22 +239,48 @@ func SaveToGob(i interface{}, fname string) error {
 }
 
 // XlsxColNames takes a struct and returns a map of the xlsx tags in that struct (i.e. the columns) and the name of the associated struct field.
-// type User struct {
-// 	Id    int    `validate:"-"`
-// 	Name  string `xlsx:"2"`
-// 	Email string `validate:"3"`
-// }
-// func main() {
-// 	user := User{
-// 		Id:    1,
-// 		Name:  "John Doe",
-// 		Email: "john@example",
+// It can be used to validate the imported column types from "github.com/tealeg/xlsx/". For example by using below code:
+//
+//  var nilConverter xlsx.CellVisitorFunc = func(c *xlsx.Cell) error {
+// 	col, _ := c.GetCoordinates()
+// 	string, _ := c.FormattedValue()
+// 	if string == "" {
+// 		switch colNames[col] {
+// 		case "Days":
+// 			c.SetInt(0)
+// 		case "TotalDays":
+// 			c.SetInt(0)
+// 		case "FinEnd":
+// 			c.SetDate(time.Date(9999, time.December, 31, 0, 0, 0, 0, time.UTC))
+// 		case "NLOK1":
+// 			c.SetFloat(0.0)
+// 		case "NLOK2":
+// 			c.SetFloat(0.0)
+// 		case "NLPAY":
+// 			c.SetFloat(0.0)
+// 		case "NLPAYFTE":
+// 			c.SetFloat(0.0)
+// 		}
 // 	}
-// 	colNames:= XlsxColNames(user)
-// 	fmt.Println(colNames)
-// 	fmt.Println(colNames["2"])
-// 	fmt.Println(colNames["3"])
-// }
+// 	return nil
+// 	}
+//  file, err := xlsx.OpenFile(fname)
+// 	if err != nil {
+// 		return sr, fmt.Errorf("Error while opening file '%v': %v", fname, err)
+// 	}
+// 	for i := startRow; i <= file.Sheets[0].MaxRow-1; i++ {
+// 		line := &sickness{}
+// 		row, err := file.Sheets[0].Row(i)
+// 		if err != nil {
+// 			return sr, fmt.Errorf("Error retrieving row %v from '%v': %v", i+1, fname, err)
+// 		}
+// 		row.ForEachCell(nilConverter)
+// 		err = row.ReadStruct(line)
+// 		if err != nil {
+// 			return sr, fmt.Errorf("Error converting row %v from '%v': %v", i+1, fname, err)
+// 		}
+// 		sr = append(sr, *line)
+// 	}
 func XlsxColNames(s interface{}) map[int]string {
 	const tagName = "xlsx"
 	m := map[int]string{}
