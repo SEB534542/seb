@@ -16,6 +16,19 @@ import (
 	"time"
 )
 
+// reverseShift takes a string and a delta, reverses the string and shifts every
+// value by d runes.
+func reverseShift(s string, d int) string {
+	rns := []rune(s) // convert to rune
+	for i, j := 0, len(rns)-1; i < j; i, j = i+1, j-1 {
+		// swap the letters of the string,
+		// like first with last and so on.
+		rns[i], rns[j] = rns[j]+rune(d), rns[i]+rune(d)
+	}
+	// return the reversed string.
+	return string(rns)
+}
+
 // MaxIntSlice takes a variadic parameter of integers and
 // returns the highest integer.
 func MaxIntSlice(xi ...int) int {
